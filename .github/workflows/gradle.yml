@@ -23,4 +23,15 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Package
-          path: build/libs
+  
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download a single artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: Package
+    
+    - name: Test with Gradle
+      run: ./gradlew test
