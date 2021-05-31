@@ -1,16 +1,14 @@
 package features;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.Assert;
+import org.testng.Assert;
 import org.testng.internal.collections.Pair;
 import revolut.*;
 
-import java.util.Currency;
 import java.util.HashMap;
 
 import static org.testng.Assert.assertEquals;
@@ -43,7 +41,7 @@ public class StepDefinitions {
 
     @Given("{word} selects {double} {word} as the topUp amount")
     public void danny_selects_euro_as_the_top_up_amount(String personName, Double topUpAmount, String accountCurrency) {
-        Pair<String, Double> topUp = new Pair(accountCurrency,topUpAmount);
+        Pair<String, Double> topUp = new Pair<String,Double>(accountCurrency,topUpAmount);
         topUps.put(personName, topUp);
     }
 

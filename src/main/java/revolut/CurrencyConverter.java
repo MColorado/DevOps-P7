@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class CurrencyConverter {
 
-    private static final ArrayList<Conversion> conversionList = new ArrayList();
+    private static final ArrayList<Conversion> conversionList = new ArrayList<Conversion>();
 
     public static void addConversion(double amount, String originCurrency, String destinationCurrency) {
         conversionList.add(new Conversion(amount, originCurrency, destinationCurrency));
