@@ -31,4 +31,14 @@ public class Person {
     public Account getAccount(String account) {
         return userAccounts.get(account);
     }
+
+    public void addAccount(String accountType) {
+        addAccount(accountType, 0);
+    }
+
+    public void addAccount(String accountType, double startingBalance) {
+        Currency accCurrency = Currency.getInstance(accountType);
+        Account euroAccount = new Account(accCurrency, startingBalance, new PaymentService(accountType));
+        userAccounts.put(accountType, euroAccount);
+    }
 }
