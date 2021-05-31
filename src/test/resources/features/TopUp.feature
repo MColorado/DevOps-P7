@@ -37,8 +37,18 @@ Feature: TopUp Account
       | 14          | 20          | 34          |
       | 23          | 30          | 53          |
 
-  Rule: The account balance shouldn't change if the topup payment request is rejected by the payment service
+  Rule: The account balance shouldn't change if the topUp payment request is rejected by the payment service
 
-    #The scenarios below will need a payment service that accepts or rejects a request to add funds
     Scenario: Payment service rejects the request
+      Given Danny has a starting balance of 20
+      And Danny selects his DebitCard as his topUp method
+      When Danny requests a top up by 100
+      And The DebitCard provider rejects the payment
+      Then The balance in his euro account should be 20
+
     Scenario: Payment service accepts the request
+      Given Danny has a starting balance of 20
+      And Danny selects his DebitCard as his topUp method
+      When Danny requests a top up by 100
+      And The DebitCard provider accepts the payment
+      Then The balance in his euro account should be 120

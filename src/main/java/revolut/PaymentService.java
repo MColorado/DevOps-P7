@@ -10,4 +10,9 @@ public class PaymentService {
     public String getType() {
         return serviceName;
     }
+
+    public boolean processPayment(Payment payment) {
+        /* Do some payment processing */
+        return payment.isPaymentApproved();
+    }
 }
