@@ -7,7 +7,6 @@ Feature: TopUp Account
     Given Danny has 10 euro in his euro Revolut account
     And Danny selects 100 euro as the topUp amount
     And  Danny selects his DebitCard as his topUp method
-    #And  Danny selects his BankAccount as his topUp method
     When Danny tops up
     Then The new balance of his euro account should now be 110
 
@@ -16,16 +15,9 @@ Feature: TopUp Account
     Given Danny has 20 euro in his euro Revolut account
     And Danny selects 230 euro as the topUp amount
     And  Danny selects his BankAccount as his topUp method
-    #And  Danny selects his BankAccount as his topUp method
     When Danny tops up
     Then The new balance of his euro account should now be 250
 
-
-
-  #ToDo implement the remaining scenarios listed below
-
-  #To implement this scenario you will need to use data tables
-    # https://cucumber.io/docs/cucumber/api/
   Scenario Outline: Add various amounts to Revolut account
     Given Danny has a starting balance of <startBalance>
     And Danny selects his DebitCard as his topUp method
