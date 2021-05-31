@@ -2,13 +2,16 @@ package features;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import revolut.Payment;
-import revolut.PaymentService;
-import revolut.Person;
+import org.testng.internal.collections.Pair;
+import revolut.*;
+
+import java.util.Currency;
+import java.util.HashMap;
 
 import static org.testng.Assert.assertEquals;
 
@@ -19,63 +22,74 @@ public class StepDefinitions {
     PaymentService topUpMethod;
     Person danny;
     Payment paymentRequest;
+    HashMap<String, Person> people = new HashMap<>();
+    HashMap<String, Pair<String, Double>> topUps = new HashMap<>();
 
     @Before//Before hooks run before the first step in each scenario
     public void setUp() {
         //We can use this to setup test data for each scenario
         danny = new Person("Danny");
+        people.put("Danny", danny);
     }
 
-    @Given("Danny has {double} euro in his euro Revolut account")
-    public void dannyHasEuroInHisEuroRevolutAccount(double startingBalance) {
-        danny.setAccountBalance(startingBalance);
+    @Given("{word} has {double} euro in his {word} Revolut account")
+    public void personHasEuroInHisEuroRevolutAccount(String personName, double startingBalance, String accountType) {
+        if(!people.containsKey(personName)) {
+            people.put(personName, new Person(personName));
+        }
+        var currentPerson = people.get(personName);
+        currentPerson.addAccount(accountType, startingBalance);
     }
 
-    @Given("Danny selects {double} euro as the topUp amount")
-    public void danny_selects_euro_as_the_top_up_amount(double topUpAmount) {
-        this.topUpAmount = topUpAmount;
+    @Given("{word} selects {double} {word} as the topUp amount")
+    public void danny_selects_euro_as_the_top_up_amount(String personName, Double topUpAmount, String accountCurrency) {
+        Pair<String, Double> topUp = new Pair(accountCurrency,topUpAmount);
+        topUps.put(personName, topUp);
     }
 
-    @Given("Danny selects his {paymentService} as his topUp method")
-    public void danny_selects_his_debit_card_as_his_top_up_method(PaymentService topUpSource) {
+    @Given("{word} selects his {paymentService} as his topUp method")
+    public void danny_selects_his_debit_card_as_his_top_up_method(String personName, PaymentService topUpSource) {
         topUpMethod = topUpSource;
     }
 
-    @When("Danny tops up")
-    public void danny_tops_up() {
+    @When("{word} tops up")
+    public void danny_tops_up(String personName) {
         // Write code here that turns the phrase above into concrete actions
-        danny.getAccount("EUR").addFunds(new Payment(topUpAmount));
+        var topUp = topUps.get(personName);
+        people.get(personName).getAccount(topUp.first()).addFunds(new Payment(topUp.second()));
     }
 
-    @Then("The new balance of his euro account should now be {double}")
-    public void the_new_balance_of_his_euro_account_should_now_be(double newBalance) {
+    @Then("The new balance of {word}'s {word} account should now be {double}")
+    public void the_new_balance_of_his_euro_account_should_now_be(String personName, String currency, double newBalance) {
         // Write code here that turns the phrase above into concrete actions
-        //throw new io.cucumber.java.PendingException();
         //Arrange
         double expectedResult = newBalance;
         //Act
-        double actualResult = danny.getAccount("EUR").getBalance();
+        double actualResult = people.get(personName).getAccount(currency).getBalance();
         //Assert
         Assert.assertEquals(expectedResult, actualResult, 0);
         System.out.println("The new final balance is: " + actualResult);
     }
 
-    @Given("Danny has a starting balance of {double}")
-    public void danny_has_a_starting_balance_of(double startBalance) {
-        danny.setAccountBalance(startBalance);
+    @Given("{word} has a starting balance of {double}")
+    public void danny_has_a_starting_balance_of(String personName, double startBalance) {
+        if(!people.containsKey(personName)) {
+            people.put(personName, new Person(personName));
+        }
+        people.get(personName).setAccountBalance(startBalance);
     }
 
-    @When("Danny now tops up by {double}")
-    public void danny_now_tops_up_by(double topUpAmount) {
-        danny.getAccount("EUR").addFunds(new Payment(topUpAmount));
+    @When("{word} now tops up by {double}")
+    public void danny_now_tops_up_by(String personName, double topUpAmount) {
+        people.get(personName).getAccount("EUR").addFunds(new Payment(topUpAmount));
     }
 
-    @Then("The balance in his euro account should be {double}")
-    public void the_balance_in_his_euro_account_should_be(double endBalance) {
+    @Then("The balance in {word}'s {word} account should be {double}")
+    public void the_balance_in_his_euro_account_should_be(String personName, String currency, double endBalance) {
         // Arrange
         var expected = endBalance;
         // Act
-        var actual = danny.getAccountBalance("EUR");
+        var actual = people.get(personName).getAccountBalance(currency);
         // Assert
         assertEquals(expected, actual, "The balance of euro account should match");
     }
@@ -91,4 +105,30 @@ public class StepDefinitions {
         danny.getAccount("EUR").addFunds(paymentRequest, service);
     }
 
+    @Given("{word} has a revolut {word} account")
+    public void setUpPersonHasARevolutEURAccount(String personName, String currency) {
+        if(!people.containsKey(personName)) {
+            people.put(personName, new Person(personName));
+        }
+        people.get(personName).addAccount(currency);
+    }
+
+    @When("{word} sends {int} {word} to {word}")
+    public void dannySendsEuroToJenny(String originPerson, int amount, String currency, String destinationPerson) {
+        var origin = people.get(originPerson);
+        var destination = people.get(destinationPerson);
+        origin.sendFunds(amount, currency, destination);
+    }
+
+    @When("{word} sends {int} {word} to {word}'s {word} account")
+    public void dannySendsEURToJennySUSDAccount(String originPerson, int amount, String originCurrency, String destinationPerson, String destinationCurrency) {
+        var origin = people.get(originPerson);
+        var destination = people.get(destinationPerson);
+        origin.sendFunds(amount, originCurrency, destination, destinationCurrency);
+    }
+
+    @And("exchange rate between {word} and {word} is {double}")
+    public void exchangeRateBetweenEURAndUSDIs(String originCurrency, String destCurrency, double rate) {
+        CurrencyConverter.addConversion(rate, originCurrency, destCurrency);
+    }
 }

@@ -31,4 +31,29 @@ public class Person {
     public Account getAccount(String account) {
         return userAccounts.get(account);
     }
+
+    public void addAccount(String accountType) {
+        addAccount(accountType, 0);
+    }
+
+    public void addAccount(String accountType, double startingBalance) {
+        Currency accCurrency = Currency.getInstance(accountType);
+        Account euroAccount = new Account(accCurrency, startingBalance, new PaymentService(accountType));
+        userAccounts.put(accountType, euroAccount);
+    }
+
+    public void sendFunds(double amount, String currency, Person destination) {
+        sendFunds(amount, currency, destination, currency);
+    }
+
+    public void sendFunds(double amount, String originCurrency, Person destination, String destinationCurrency) {
+        if(amount > 0) {
+            var account = userAccounts.get(originCurrency);
+            if(account.getBalance() >= amount) {
+                account.addFunds(new Payment(-amount));
+            }
+            var destinationAccount = destination.getAccount(destinationCurrency);
+            destinationAccount.addFunds(new Payment(CurrencyConverter.convert(amount, originCurrency, destinationCurrency)));
+        }
+    }
 }

@@ -4,33 +4,25 @@ Feature: TopUp Account
   #As a user, I can topup my Revolut account using my debit card
 
   Scenario: Add money to Revolut account using debit card
-    Given Danny has 10 euro in his euro Revolut account
-    And Danny selects 100 euro as the topUp amount
+    Given Danny has 10 euro in his EUR Revolut account
+    And Danny selects 100 EUR as the topUp amount
     And  Danny selects his DebitCard as his topUp method
-    #And  Danny selects his BankAccount as his topUp method
     When Danny tops up
-    Then The new balance of his euro account should now be 110
+    Then The new balance of Danny's EUR account should now be 110
 
 
   Scenario: Add money to Revolut account using bank account
-    Given Danny has 20 euro in his euro Revolut account
-    And Danny selects 230 euro as the topUp amount
+    Given Danny has 20 euro in his EUR Revolut account
+    And Danny selects 230 EUR as the topUp amount
     And  Danny selects his BankAccount as his topUp method
-    #And  Danny selects his BankAccount as his topUp method
     When Danny tops up
-    Then The new balance of his euro account should now be 250
+    Then The new balance of Danny's EUR account should now be 250
 
-
-
-  #ToDo implement the remaining scenarios listed below
-
-  #To implement this scenario you will need to use data tables
-    # https://cucumber.io/docs/cucumber/api/
   Scenario Outline: Add various amounts to Revolut account
     Given Danny has a starting balance of <startBalance>
     And Danny selects his DebitCard as his topUp method
     When Danny now tops up by <topUpAmount>
-    Then The balance in his euro account should be <newBalance>
+    Then The balance in Danny's EUR account should be <newBalance>
     Examples:
       | startBalance| topUpAmount | newBalance  |
       | 0           | 100         | 100         |
@@ -44,11 +36,11 @@ Feature: TopUp Account
       And Danny selects his DebitCard as his topUp method
       When Danny requests a top up by 100
       And The DebitCard provider rejects the payment
-      Then The balance in his euro account should be 20
+      Then The balance in Danny's EUR account should be 20
 
     Scenario: Payment service accepts the request
       Given Danny has a starting balance of 20
       And Danny selects his DebitCard as his topUp method
       When Danny requests a top up by 100
       And The DebitCard provider accepts the payment
-      Then The balance in his euro account should be 120
+      Then The balance in Danny's EUR account should be 120
