@@ -5,10 +5,12 @@ import java.util.Currency;
 public class Account {
     private Currency accCurrency;
     private double balance;
+    private PaymentService defaultPaymentService;
 
-    public Account(Currency currency, double balance){
+    public Account(Currency currency, double balance, PaymentService defaultPaymentService){
         this.balance = balance;
         this.accCurrency = currency;
+        this.defaultPaymentService = defaultPaymentService;
     }
 
     public void setBalance(double newBalance) {
@@ -19,7 +21,15 @@ public class Account {
         return this.balance;
     }
 
-    public void addFunds(double topUpAmount) {
-        this.balance += topUpAmount;
+    public void addFunds(Payment payment)
+    {
+        addFunds(payment, defaultPaymentService);
+    }
+
+    public void addFunds(Payment payment, PaymentService service)
+    {
+        if(service.processPayment(payment)) {
+            this.balance += payment.getPaymentAmount();
+        }
     }
 }

@@ -17,7 +17,7 @@ dependencies {
     testImplementation("io.cucumber:cucumber-java:6.10.3")
 
     //Use TestNG test framework
-    //testImplementation("io.cucumber:cucumber-testng:6.10.3")
+    testImplementation("io.cucumber:cucumber-testng:6.10.3")
 }
 
 /*tasks.getByName<Test>("test") {

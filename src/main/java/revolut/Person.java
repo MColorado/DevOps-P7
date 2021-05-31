@@ -16,12 +16,12 @@ public class Person {
         this.name = name;
         //Create a default euro account and add it the our userAccounts container
         Currency accCurrency = Currency.getInstance("EUR");
-        Account euroAccount = new Account(accCurrency, 0);
+        Account euroAccount = new Account(accCurrency, 0, new PaymentService("EUR"));
         userAccounts.put("EUR", euroAccount);
     }
 
-    public void setAccountBalance(double startingBlanace) {
-        userAccounts.get("EUR").setBalance(startingBlanace);
+    public void setAccountBalance(double startingBalance) {
+        userAccounts.get("EUR").setBalance(startingBalance);
     }
 
     public double getAccountBalance(String eur) {
