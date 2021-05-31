@@ -5,13 +5,15 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.testng.Assert;
 import org.testng.internal.collections.Pair;
-import revolut.*;
+import revolut.CurrencyConverter;
+import revolut.Payment;
+import revolut.PaymentService;
+import revolut.Person;
 
 import java.util.HashMap;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StepDefinitions {
 
@@ -65,7 +67,7 @@ public class StepDefinitions {
         //Act
         double actualResult = people.get(personName).getAccount(currency).getBalance();
         //Assert
-        Assert.assertEquals(expectedResult, actualResult, 0);
+        assertEquals(expectedResult, actualResult, 0);
         System.out.println("The new final balance is: " + actualResult);
     }
 

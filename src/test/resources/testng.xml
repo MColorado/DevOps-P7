@@ -1,9 +1,0 @@
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-
-<suite name="Cucumber suite" >
-    <test name="Cucumber Features">
-        <classes>
-            <class name="features.RunCucumberTest"/>
-        </classes>
-    </test>
-</suite>
