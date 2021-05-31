@@ -42,13 +42,13 @@ Feature: TopUp Account
     Scenario: Payment service rejects the request
       Given Danny has a starting balance of 20
       And Danny selects his DebitCard as his topUp method
-      When Danny now tops up by 100
+      When Danny requests a top up by 100
       And The DebitCard provider rejects the payment
       Then The balance in his euro account should be 20
 
     Scenario: Payment service accepts the request
       Given Danny has a starting balance of 20
       And Danny selects his DebitCard as his topUp method
-      When Danny now tops up by 100
+      When Danny requests a top up by 100
       And The DebitCard provider accepts the payment
       Then The balance in his euro account should be 120

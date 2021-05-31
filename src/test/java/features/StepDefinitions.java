@@ -18,12 +18,14 @@ public class StepDefinitions {
     //private String topUpMethod;
     PaymentService topUpMethod;
     Person danny;
+    Payment paymentRequest;
 
     @Before//Before hooks run before the first step in each scenario
-    public void setUp(){
+    public void setUp() {
         //We can use this to setup test data for each scenario
         danny = new Person("Danny");
     }
+
     @Given("Danny has {double} euro in his euro Revolut account")
     public void dannyHasEuroInHisEuroRevolutAccount(double startingBalance) {
         danny.setAccountBalance(startingBalance);
@@ -43,7 +45,6 @@ public class StepDefinitions {
     public void danny_tops_up() {
         // Write code here that turns the phrase above into concrete actions
         danny.getAccount("EUR").addFunds(new Payment(topUpAmount));
-        //throw new io.cucumber.java.PendingException();
     }
 
     @Then("The new balance of his euro account should now be {double}")
@@ -55,7 +56,7 @@ public class StepDefinitions {
         //Act
         double actualResult = danny.getAccount("EUR").getBalance();
         //Assert
-        Assert.assertEquals(expectedResult, actualResult,0);
+        Assert.assertEquals(expectedResult, actualResult, 0);
         System.out.println("The new final balance is: " + actualResult);
     }
 
@@ -79,14 +80,15 @@ public class StepDefinitions {
         assertEquals(expected, actual, "The balance of euro account should match");
     }
 
-    @When("The {paymentService} provider rejects the payment")
-    public void the_debit_card_provider_rejects_the_payment(PaymentService service) {
-
+    @When("Danny requests a top up by {double}")
+    public void danny_requests_a_top_up_by(double amount) {
+        paymentRequest = new Payment(amount);
     }
 
-    @When("The {paymentService} provider accepts the payment")
-    public void the_debit_card_provider_accepts_the_payment() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    @When("The {paymentService} provider {paymentApproval} the payment")
+    public void the_debit_card_provider_rejects_the_payment(PaymentService service, boolean paymentApproval) {
+        paymentRequest.setPaymentApproved(paymentApproval);
+        danny.getAccount("EUR").addFunds(paymentRequest, service);
     }
+
 }
