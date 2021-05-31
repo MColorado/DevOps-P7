@@ -2,15 +2,13 @@ package features;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.testng.internal.collections.Pair;
-import revolut.Account;
-import revolut.Payment;
-import revolut.PaymentService;
-import revolut.Person;
+import revolut.*;
 
 import java.util.Currency;
 import java.util.HashMap;
@@ -107,4 +105,30 @@ public class StepDefinitions {
         danny.getAccount("EUR").addFunds(paymentRequest, service);
     }
 
+    @Given("{word} has a revolut {word} account")
+    public void setUpPersonHasARevolutEURAccount(String personName, String currency) {
+        if(!people.containsKey(personName)) {
+            people.put(personName, new Person(personName));
+        }
+        people.get(personName).addAccount(currency);
+    }
+
+    @When("{word} sends {int} {word} to {word}")
+    public void dannySendsEuroToJenny(String originPerson, int amount, String currency, String destinationPerson) {
+        var origin = people.get(originPerson);
+        var destination = people.get(destinationPerson);
+        origin.sendFunds(amount, currency, destination);
+    }
+
+    @When("{word} sends {int} {word} to {word}'s {word} account")
+    public void dannySendsEURToJennySUSDAccount(String originPerson, int amount, String originCurrency, String destinationPerson, String destinationCurrency) {
+        var origin = people.get(originPerson);
+        var destination = people.get(destinationPerson);
+        origin.sendFunds(amount, originCurrency, destination, destinationCurrency);
+    }
+
+    @And("exchange rate between {word} and {word} is {double}")
+    public void exchangeRateBetweenEURAndUSDIs(String originCurrency, String destCurrency, double rate) {
+        CurrencyConverter.addConversion(rate, originCurrency, destCurrency);
+    }
 }
