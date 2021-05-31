@@ -1,19 +1,19 @@
 package features;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.Assert;
 import org.testng.internal.collections.Pair;
-import revolut.*;
+import revolut.CurrencyConverter;
+import revolut.Payment;
+import revolut.PaymentService;
+import revolut.Person;
 
-import java.util.Currency;
 import java.util.HashMap;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StepDefinitions {
 
@@ -43,7 +43,7 @@ public class StepDefinitions {
 
     @Given("{word} selects {double} {word} as the topUp amount")
     public void danny_selects_euro_as_the_top_up_amount(String personName, Double topUpAmount, String accountCurrency) {
-        Pair<String, Double> topUp = new Pair(accountCurrency,topUpAmount);
+        Pair<String, Double> topUp = new Pair<String,Double>(accountCurrency,topUpAmount);
         topUps.put(personName, topUp);
     }
 
@@ -67,7 +67,7 @@ public class StepDefinitions {
         //Act
         double actualResult = people.get(personName).getAccount(currency).getBalance();
         //Assert
-        Assert.assertEquals(expectedResult, actualResult, 0);
+        assertEquals(expectedResult, actualResult, 0);
         System.out.println("The new final balance is: " + actualResult);
     }
 
